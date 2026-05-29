@@ -1,0 +1,14 @@
+1. Additions and Why They Were Added:
+Dedicated Load Balancer (HAproxy Cluster): We now have a second load balancer configured as a cluster with the first one. This eliminates the SPOF (Single Point of Failure) at the entry point. Using a Virtual IP (VIP) and a tool like Keepalived allows them to failover if one goes down.
+
+Component Splitting: Instead of having everything on one server, we now have dedicated servers for the Web Server, the Application Server, and the Database. This separation prevents one component's resource usage (e.g., a memory-heavy app) from crashing another (e.g., the database).
+
+2. Technical Explanation:
+Why split components? It allows for granular scaling. If the application server needs more RAM, you can scale that specific tier without needing to upgrade the database server or the load balancer. It also improves security, as you can tighten firewall rules for each specific service tier.
+
+3. Issues and Limitations:
+Complexity: Managing a multi-server, multi-tier environment requires automated configuration management (like Puppet, Chef, or Ansible). Manual updates become prone to human error.
+
+No "Zero Downtime" Deployment: Even with this setup, unless you implement a rolling deployment strategy, switching between versions of the application might still cause minor interruptions.
+
+Database Consistency: While we have more servers, ensuring data consistency across the cluster in write-heavy scenarios becomes increasingly difficult.
