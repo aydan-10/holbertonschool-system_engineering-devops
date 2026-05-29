@@ -1,0 +1,25 @@
+Infrastructure Design: 1-Distributed Web Infrastructure
+1. Components and Why They Were Added:
+Load Balancer (HAproxy): Added to distribute incoming traffic across multiple servers, preventing any single server from being overwhelmed and ensuring high availability.
+
+Additional Server: Added to provide redundancy and increase processing power, allowing the system to handle more concurrent requests.
+
+Primary-Replica MySQL Cluster: Added to improve database reliability. The Primary node handles write operations, while the Replica node handles read operations, ensuring data integrity and better performance.
+
+2. Technical Explanations:
+Load Balancing Algorithm: Configured with Round-Robin. It works by distributing each new request to the next server in the list in a circular order, ensuring an equal distribution of traffic.
+
+Active-Active vs. Active-Passive:
+
+Active-Active: Both servers are online and actively processing traffic simultaneously.
+
+Active-Passive: One server is active, while the other is in standby mode, ready to take over only if the active server fails.
+
+Primary-Replica DB Cluster: The Primary node is responsible for all data modification (writes). The Replica node is a read-only copy that stays synchronized with the Primary, allowing for faster read queries and backup capability.
+
+3. Issues and Limitations:
+SPOF (Single Point of Failure): Even with this setup, the Load Balancer itself is a SPOF. If it fails, the entire site goes down.
+
+Security: The system lacks a firewall (iptables/ufw) to block malicious traffic and does not use HTTPS/SSL, meaning data is transmitted in plain text.
+
+No Monitoring: There is no monitoring system (like Nagios or Datadog) to alert engineers about server health or performance issues.
