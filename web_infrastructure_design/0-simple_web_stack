@@ -1,0 +1,22 @@
+Infrastructure Design: 0-Simple Web Stack
+1. Components:
+
+Server: A single machine hosting the stack.
+
+Domain Name: foobar.com (maps to IP 8.8.8.8).
+
+DNS Record: www is a CNAME or A record pointing to the server.
+
+Web Server (Nginx): Handles HTTP requests.
+
+App Server: Executes the application code.
+
+Database (MySQL): Stores website data.
+
+2. Issues:
+
+SPOF: One server means if it fails, everything fails.
+
+Downtime: Deploying code causes downtime.
+
+Scalability: Cannot scale horizontally as traffic increases.
