@@ -1,0 +1,24 @@
+1. Additions and Why They Were Added:
+3 Firewalls: Added to each server (Load Balancer, Web/App Server 1, Web/App Server 2) to filter incoming/outgoing traffic based on predefined rules, protecting the infrastructure from unauthorized access.
+
+SSL Certificate: Added to enable HTTPS, which encrypts the communication channel between the user and the load balancer, ensuring data privacy and integrity.
+
+3 Monitoring Clients: Added to collect performance metrics (CPU, memory, disk I/O, network traffic) from each server and send them to a centralized dashboard for real-time visibility.
+
+2. Technical Explanations:
+Firewalls: Used to enforce security policies by blocking malicious traffic and only allowing necessary ports (e.g., 80 for HTTP, 443 for HTTPS).
+
+HTTPS: Required to protect sensitive user data from "man-in-the-middle" attacks and to provide authentication of the website's identity.
+
+Monitoring: Used to detect system failures, performance bottlenecks, and suspicious activities before they impact the user.
+
+Data Collection: Monitoring clients (e.g., Prometheus node_exporter or Datadog agent) usually pull or push metrics to a central server via a small binary running as a background service.
+
+Monitoring Web Server QPS: To monitor Queries Per Second (QPS), you configure the monitoring tool to parse the web server's access logs or use an active status module (e.g., ngx_http_stub_status_module for Nginx).
+
+3. Issues and Limitations:
+SSL Termination: Terminating SSL at the load balancer means the traffic between the load balancer and the backend servers is unencrypted (plain text), leaving it vulnerable if the internal network is compromised.
+
+Single Write Node: Having only one MySQL Primary server creates a bottleneck for write-heavy applications. If the Primary server fails, you lose the ability to write data until a replica is promoted.
+
+Same Components on All Servers: Running the database, web server, and app server on the same host is inefficient. If the application experiences a memory leak, it could crash the database, affecting data availability. It is better to decouple these roles (e.g., dedicated DB server, dedicated Web servers).
